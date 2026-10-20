@@ -1,0 +1,37 @@
+{
+  "voice1": {
+    "slug": "voice1",
+    "mediaType": "audio",
+    "mediaUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "views": 26,
+    "createdAt": "2026-10-19T12:00:00.000Z"
+  },
+  "img1": {
+    "slug": "img1",
+    "mediaType": "image",
+    "mediaUrl": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
+    "views": 50,
+    "createdAt": "2026-10-19T12:15:00.000Z"
+  },
+  "link1": {
+    "slug": "link1",
+    "mediaType": "link",
+    "mediaUrl": "https://discord.gg/minecraft",
+    "views": 14,
+    "createdAt": "2026-10-19T12:30:00.000Z"
+  },
+  "7gu6": {
+    "slug": "7gu6",
+    "mediaType": "link",
+    "mediaUrl": "https://discord.gg/pubg",
+    "views": 0,
+    "createdAt": "2026-10-20T07:12:56.110Z"
+  },
+  "a6r5": {
+    "slug": "a6r5",
+    "mediaType": "audio",
+    "mediaUrl": "/uploads/1792480478867-762.webm",
+    "views": 1,
+    "createdAt": "2026-10-20T07:14:38.883Z"
+  }
+}

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GGLINK &mdash; Minimalist In-Game Media Sharer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f8fafc',
+              500: '#ffffff',
+              900: '#09090b',
+              950: '#040406',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #09090b;
+      color: #f4f4f5;
+      -webkit-font-smoothing: antialiased;
+    }
+    .subtle-grid {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .glass-panel {
+      background: rgba(18, 18, 23, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .wave-bar {
+      transition: height 0.08s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-white selection:text-black subtle-grid">
+
+  <!-- Header -->
+  <header class="w-full border-b border-white/[0.06] bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-xl mx-auto px-5 h-14 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-zinc-950 font-bold text-xs tracking-tight">
+          GG
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="font-semibold text-sm tracking-tight text-white">GGLINK</span>
+          <span class="text-[11px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-medium">v1.0</span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <!-- Settings button -->
+        <button id="settingsBtn" class="text-zinc-400 hover:text-white transition p-1.5 rounded-lg hover:bg-zinc-900 text-xs flex items-center space-x-1.5">
+          <i class="fa-solid fa-sliders"></i>
+          <span class="hidden sm:inline">Options</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-xl mx-auto w-full px-5 py-8 flex flex-col justify-center">
+
+    <!-- Hero Title -->
+    <div class="text-center mb-8 space-y-2">
+      <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+        Share media inside game chats
+      </h1>
+      <p class="text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
+        Send voice notes, screenshots, and links in Free Fire, PUBG, or King's Choice with a tiny 4-letter URL.
+      </p>
+    </div>
+
+    <!-- Options / Settings Dropdown (Hidden by default) -->
+    <div id="settingsDrawer" class="hidden mb-6 p-4 rounded-xl glass-panel text-xs space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-zinc-300 font-medium">Auto-Delete Media (Privacy)</span>
+        <select id="expiresIn" class="bg-zinc-900 border border-white/10 rounded-lg px-2.5 py-1 text-zinc-200 focus:outline-none">
+          <option value="0">Never (Permanent)</option>
+          <option value="24">After 24 Hours</option>
+          <option value="168">After 7 Days</option>
+          <option value="720">After 30 Days</option>
+        </select>
+      </div>
+      <p class="text-[11px] text-zinc-500">
+        Images are automatically compressed to WebP and voice clips are encoded in Opus for instant in-game loading.
+      </p>
+    </div>
+
+    <!-- Primary Control Hub -->
+    <div class="glass-panel rounded-2xl p-6 sm:p-7 shadow-2xl relative overflow-hidden">
+
+      <!-- Navigation Segment Tabs -->
+      <div class="flex bg-zinc-900/90 p-1 rounded-xl border border-white/[0.06] mb-6">
+        <button id="btnTabVoice" class="flex-1 py-2 text-xs font-medium rounded-lg transition text-white bg-zinc-800 shadow-sm flex items-center justify-center space-x-1.5">
+          <i class="fa-solid fa-microphone text-[11px]"></i>
+          <span>Voice</span>
+        </button>
+        <button id="btnTabImage" class="flex-1 py-2 text-xs font-medium rounded-lg transition text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5">
+          <i class="fa-regular fa-image text-[11px]"></i>
+          <span>Image</span>
+        </button>
+        <button id="btnTabLink" class="flex-1 py-2 text-xs font-medium rounded-lg transition text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5">
+          <i class="fa-solid fa-link text-[11px]"></i>
+          <span>Link</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: Voice Recorder -->
+      <div id="sectionVoice" class="text-center space-y-5">
+        
+        <!-- Live Waveform Visualizer -->
+        <div class="h-16 flex items-center justify-center space-x-1 px-4 py-2 bg-zinc-950/60 rounded-xl border border-white/[0.04]">
+          <div id="waveform" class="flex items-center space-x-1 h-full">
+            <div class="w-1 bg-zinc-700 h-2 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-4 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-6 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-3 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-5 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-7 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-3 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-6 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-4 rounded-full wave-bar"></div>
+            <div class="w-1 bg-zinc-700 h-2 rounded-full wave-bar"></div>
+          </div>
+        </div>
+
+        <div class="py-2">
+          <button id="recordTrigger" class="group relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-white hover:bg-zinc-200 text-zinc-950 transition-all duration-200 shadow-xl active:scale-95 cursor-pointer">
+            <i class="fa-solid fa-microphone text-2xl" id="recordIcon"></i>
+            <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-rose-500 border-2 border-zinc-950 hidden" id="recDot"></span>
+          </button>
+        </div>
+
+        <div>
+          <div class="text-xs font-medium text-zinc-200" id="recordPrompt">Tap to record voice message</div>
+          <div class="text-[11px] text-zinc-500 font-mono mt-0.5" id="recordTimer">00:00 / 00:30</div>
+        </div>
+
+        <div class="pt-3 border-t border-white/[0.06] flex items-center justify-center">
+          <label class="cursor-pointer text-xs text-zinc-400 hover:text-zinc-200 transition flex items-center space-x-1.5">
+            <i class="fa-solid fa-arrow-up-from-bracket text-[10px]"></i>
+            <span>Or upload audio file</span>
+            <input type="file" id="audioFileInput" accept="audio/*" class="hidden">
+          </label>
+        </div>
+
+      </div>
+
+      <!-- TAB 2: Image Uploader -->
+      <div id="sectionImage" class="hidden space-y-4">
+        <label for="imageFileInput" class="border border-dashed border-white/10 hover:border-white/30 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition bg-zinc-950/40 group">
+          <div class="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-300 group-hover:text-white transition mb-3">
+            <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+          </div>
+          <span class="text-xs font-medium text-zinc-200">Drop screenshot or tap to browse</span>
+          <span class="text-[11px] text-zinc-500 mt-1">Supports PNG, JPG, WebP &bull; Ctrl+V to paste</span>
+          <input type="file" id="imageFileInput" accept="image/*" class="hidden">
+        </label>
+        <div id="uploadingProgress" class="hidden text-center text-xs text-zinc-400 py-2">
+          <i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Optimizing image...
+        </div>
+      </div>
+
+      <!-- TAB 3: Short Link -->
+      <div id="sectionLink" class="hidden space-y-3">
+        <label class="block text-xs font-medium text-zinc-300">Destination URL</label>
+        <div class="flex items-center space-x-2">
+          <input 
+            type="url" 
+            id="urlInput" 
+            placeholder="https://discord.gg/yourclan" 
+            class="flex-1 bg-zinc-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-white/30 transition"
+          />
+          <button id="shortenBtn" class="bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-xs px-4 py-2.5 rounded-xl transition">
+            Shorten
+          </button>
+        </div>
+        <p class="text-[11px] text-zinc-500">Creates an ultra-short 4-character link that won't get cut off in mobile chats.</p>
+      </div>
+
+    </div>
+
+    <!-- RESULT SUCCESS CARD (Appears upon creation) -->
+    <div id="successCard" class="hidden mt-6 p-5 rounded-2xl glass-panel border border-white/10 space-y-3 animate-fade-in">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <div class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <span class="text-xs font-medium text-zinc-200">Link created & copied to clipboard</span>
+        </div>
+        <span class="text-[10px] text-zinc-500 font-mono" id="shortSlug"></span>
+      </div>
+
+      <div class="bg-zinc-950 rounded-xl p-3 border border-white/[0.06] flex items-center justify-between">
+        <span class="font-mono text-xs text-zinc-200 font-semibold truncate pr-2" id="fullUrlDisplay"></span>
+        <button id="copyAgain" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium px-3 py-1.5 rounded-lg transition flex-shrink-0">
+          Copy
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between pt-1 text-[11px] text-zinc-400">
+        <a id="previewBtn" href="#" target="_blank" class="hover:text-white transition flex items-center space-x-1">
+          <span>Open Card</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+        </a>
+        <button id="newDropBtn" class="hover:text-white transition">
+          + Share Another
+        </button>
+      </div>
+    </div>
+
+    <!-- Tasteful Sponsored Slot (Production-Ready Mockup) -->
+    <div class="mt-8 p-3 rounded-xl bg-zinc-950/60 border border-white/[0.04] flex items-center justify-between text-xs">
+      <div class="flex items-center space-x-2.5 min-w-0 pr-2">
+        <span class="text-[9px] uppercase tracking-wider font-semibold text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded border border-white/[0.04]">Ad</span>
+        <span class="text-zinc-400 truncate text-[11px]">Official Multi-Game Top-Up Voucher Store</span>
+      </div>
+      <a href="https://example.com" target="_blank" class="text-[11px] text-zinc-300 hover:text-white underline font-medium flex-shrink-0">
+        Claim 5% Off &rarr;
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-white/[0.06] py-5 text-center text-xs text-zinc-500">
+    <div class="max-w-xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>&copy; 2026 GGLINK &bull; Production Infrastructure</span>
+      <div class="flex items-center space-x-4 text-[11px]">
+        <a href="#" class="hover:text-zinc-400 transition" onclick="alert('GGLINK automatically encrypts uploads and removes metadata for maximum privacy.'); return false;">Privacy</a>
+        <a href="#" class="hover:text-zinc-400 transition" onclick="alert('Zero-tolerance policy for phishing and malicious files.'); return false;">Abuse</a>
+        <a href="https://github.com/devfaisee" target="_blank" class="hover:text-zinc-400 transition">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Tab Switching
+    const btnTabVoice = document.getElementById('btnTabVoice');
+    const btnTabImage = document.getElementById('btnTabImage');
+    const btnTabLink = document.getElementById('btnTabLink');
+
+    const sectionVoice = document.getElementById('sectionVoice');
+    const sectionImage = document.getElementById('sectionImage');
+    const sectionLink = document.getElementById('sectionLink');
+
+    function switchTab(btn, section) {
+      [btnTabVoice, btnTabImage, btnTabLink].forEach(b => {
+        b.className = 'flex-1 py-2 text-xs font-medium rounded-lg transition text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5';
+      });
+      [sectionVoice, sectionImage, sectionLink].forEach(s => s.classList.add('hidden'));
+
+      btn.className = 'flex-1 py-2 text-xs font-medium rounded-lg transition text-white bg-zinc-800 shadow-sm flex items-center justify-center space-x-1.5';
+      section.classList.remove('hidden');
+    }
+
+    btnTabVoice.onclick = () => switchTab(btnTabVoice, sectionVoice);
+    btnTabImage.onclick = () => switchTab(btnTabImage, sectionImage);
+    btnTabLink.onclick = () => switchTab(btnTabLink, sectionLink);
+
+    // Options Drawer Toggle
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsDrawer = document.getElementById('settingsDrawer');
+    settingsBtn.onclick = () => settingsDrawer.classList.toggle('hidden');
+
+    // Success elements
+    const successCard = document.getElementById('successCard');
+    const fullUrlDisplay = document.getElementById('fullUrlDisplay');
+    const shortSlug = document.getElementById('shortSlug');
+    const copyAgain = document.getElementById('copyAgain');
+    const previewBtn = document.getElementById('previewBtn');
+    const newDropBtn = document.getElementById('newDropBtn');
+
+    function onCreated(slug) {
+      const full = window.location.origin + '/' + slug;
+      fullUrlDisplay.innerText = full;
+      shortSlug.innerText = '/' + slug;
+      previewBtn.href = '/' + slug;
+      successCard.classList.remove('hidden');
+      successCard.scrollIntoView({ behavior: 'smooth' });
+
+      // Auto-copy
+      navigator.clipboard.writeText(full).then(() => {
+        copyAgain.innerText = 'Copied!';
+        setTimeout(() => { copyAgain.innerText = 'Copy'; }, 2000);
+      }).catch(() => {});
+    }
+
+    newDropBtn.onclick = () => successCard.classList.add('hidden');
+    copyAgain.onclick = () => {
+      navigator.clipboard.writeText(fullUrlDisplay.innerText).then(() => {
+        copyAgain.innerText = 'Copied!';
+        setTimeout(() => { copyAgain.innerText = 'Copy'; }, 2000);
+      });
+    };
+
+    // --- 1. VOICE RECORDING WITH ANIMATED WAVEFORM ---
+    const recordTrigger = document.getElementById('recordTrigger');
+    const recordIcon = document.getElementById('recordIcon');
+    const recDot = document.getElementById('recDot');
+    const recordPrompt = document.getElementById('recordPrompt');
+    const recordTimer = document.getElementById('recordTimer');
+    const waveBars = document.querySelectorAll('.wave-bar');
+
+    let isRecording = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let audioCtx = null;
+    let analyser = null;
+    let animFrame = null;
+    let timerInt = null;
+    let seconds = 0;
+
+    recordTrigger.onclick = async () => {
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          
+          // Audio visualization
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 32;
+          const source = audioCtx.createMediaStreamSource(stream);
+          source.connect(analyser);
+
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+          function animateWave() {
+            if (!isRecording) return;
+            analyser.getByteFrequencyData(dataArray);
+            waveBars.forEach((bar, idx) => {
+              const val = dataArray[idx % dataArray.length] || 10;
+              const h = Math.max(4, Math.min(48, (val / 255) * 48));
+              bar.style.height = `${h}px`;
+              bar.style.backgroundColor = '#f43f5e';
+            });
+            animFrame = requestAnimationFrame(animateWave);
+          }
+          animateWave();
+
+          mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+          audioChunks = [];
+          mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+
+          mediaRecorder.onstop = async () => {
+            stream.getTracks().forEach(t => t.stop());
+            if (audioCtx) audioCtx.close();
+            cancelAnimationFrame(animFrame);
+            clearInterval(timerInt);
+
+            waveBars.forEach(bar => {
+              bar.style.height = '8px';
+              bar.style.backgroundColor = '#52525b';
+            });
+
+            recordPrompt.innerText = 'Saving voice note...';
+            const blob = new Blob(audioChunks, { type: 'audio/webm' });
+
+            const fd = new FormData();
+            fd.append('media', blob, 'voice.webm');
+            fd.append('expiresIn', document.getElementById('expiresIn').value);
+
+            const res = await fetch('/api/drop', { method: 'POST', body: fd });
+            const data = await res.json();
+            if (data.success) {
+              onCreated(data.slug);
+            } else {
+              alert(data.error || 'Failed to save voice note');
+            }
+
+            // Reset UI
+            recordIcon.className = 'fa-solid fa-microphone text-2xl';
+            recDot.classList.add('hidden');
+            recordPrompt.innerText = 'Tap to record voice message';
+            recordTimer.innerText = '00:00 / 00:30';
+            isRecording = false;
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          recordIcon.className = 'fa-solid fa-stop text-2xl text-rose-500';
+          recDot.classList.remove('hidden');
+          recordPrompt.innerText = 'Recording... tap to finish';
+
+          seconds = 0;
+          timerInt = setInterval(() => {
+            seconds++;
+            const s = (seconds % 60).toString().padStart(2, '0');
+            recordTimer.innerText = `00:${s} / 00:30`;
+            if (seconds >= 30) mediaRecorder.stop();
+          }, 1000);
+
+        } catch (err) {
+          alert('Microphone access is required to record voice notes. You can also upload an audio file directly.');
+        }
+      } else {
+        mediaRecorder.stop();
+      }
+    };
+
+    // Audio file upload fallback
+    document.getElementById('audioFileInput').onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const fd = new FormData();
+      fd.append('media', file);
+      fd.append('expiresIn', document.getElementById('expiresIn').value);
+      const res = await fetch('/api/drop', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.success) onCreated(data.slug);
+    };
+
+    // --- 2. IMAGE WEBP CLIENT COMPRESSION ---
+    const imageFileInput = document.getElementById('imageFileInput');
+    const uploadingProgress = document.getElementById('uploadingProgress');
+
+    async function processAndUploadImage(file) {
+      uploadingProgress.classList.remove('hidden');
+
+      // Client-side canvas compression to WebP (keeps uploads tiny and fast)
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = async () => {
+        const canvas = document.createElement('canvas');
+        const maxDim = 1600;
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = (h / w) * maxDim; w = maxDim; }
+          else { w = (w / h) * maxDim; h = maxDim; }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        canvas.toBlob(async (blob) => {
+          const fd = new FormData();
+          fd.append('media', blob, 'screenshot.webp');
+          fd.append('expiresIn', document.getElementById('expiresIn').value);
+
+          const res = await fetch('/api/drop', { method: 'POST', body: fd });
+          const data = await res.json();
+          uploadingProgress.classList.add('hidden');
+          if (data.success) onCreated(data.slug);
+        }, 'image/webp', 0.85);
+      };
+    }
+
+    imageFileInput.onchange = (e) => {
+      if (e.target.files[0]) processAndUploadImage(e.target.files[0]);
+    };
+
+    window.addEventListener('paste', (e) => {
+      const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+      for (const item of items) {
+        if (item.kind === 'file' && item.type.startsWith('image/')) {
+          processAndUploadImage(item.getAsFile());
+          break;
+        }
+      }
+    });
+
+    // --- 3. LINK SHORTENER ---
+    const urlInput = document.getElementById('urlInput');
+    const shortenBtn = document.getElementById('shortenBtn');
+
+    shortenBtn.onclick = async () => {
+      const url = urlInput.value.trim();
+      if (!url) return alert('Please enter a destination URL');
+
+      const res = await fetch('/api/drop', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          linkUrl: url,
+          expiresIn: document.getElementById('expiresIn').value
+        })
+      });
+      const data = await res.json();
+      if (data.success) onCreated(data.slug);
+      else alert(data.error || 'Failed to shorten URL');
+    };
+  </script>
+</body>
+</html>
