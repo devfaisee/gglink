@@ -4,11 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Shared Media &mdash; GGLINK</title>
+  
+  <!-- DYNAMIC_META -->
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:site_name" content="GGLINK">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Instant SVG Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23ffffff'/><text x='50%' y='55%' font-family='sans-serif' font-weight='900' font-size='50' fill='%2309090b' text-anchor='middle' dominant-baseline='central'>GG</text></svg>">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -21,7 +31,7 @@
       background-size: 24px 24px;
     }
     .glass-panel {
-      background: rgba(18, 18, 23, 0.75);
+      background: rgba(18, 18, 23, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -30,7 +40,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-white selection:text-black subtle-grid">
 
-  <!-- Header -->
+  <!-- Minimal Header -->
   <header class="w-full border-b border-white/[0.06] bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-md mx-auto px-5 h-14 flex items-center justify-between">
       <a href="/" class="flex items-center space-x-2.5">
@@ -40,42 +50,18 @@
         <span class="font-semibold text-sm tracking-tight text-white">GGLINK</span>
       </a>
       <a href="/" class="text-xs text-zinc-300 hover:text-white font-medium bg-zinc-900 border border-white/10 px-3 py-1.5 rounded-lg transition">
-        + Create Link
+        + Share Media
       </a>
     </div>
   </header>
 
-  <!-- MOCKUP AD SLOT 1 (Clean Native Sponsored Banner) -->
-  <div class="max-w-md mx-auto w-full px-5 pt-4">
-    <div class="p-3 rounded-xl bg-zinc-950/90 border border-white/[0.07] hover:border-white/20 transition">
-      <div class="flex items-center justify-between text-[10px] text-zinc-400 mb-1.5">
-        <span class="uppercase tracking-wider font-semibold text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded border border-white/[0.04]">Sponsored</span>
-        <span class="text-zinc-500">Ad Placement 1</span>
-      </div>
-      <a href="https://example.com" target="_blank" class="flex items-center justify-between space-x-3 group">
-        <div class="flex items-center space-x-3 min-w-0">
-          <div class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 text-sm flex-shrink-0">
-            <i class="fa-solid fa-gamepad"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-xs font-semibold text-zinc-100 group-hover:text-white truncate">Global Game Currency & Top-Up Store</div>
-            <div class="text-[11px] text-zinc-400 truncate">Official vouchers for Free Fire, PUBG, COD & Mobile Legends</div>
-          </div>
-        </div>
-        <span class="text-[11px] font-medium text-zinc-300 group-hover:text-white bg-zinc-800 px-2.5 py-1 rounded-md flex-shrink-0 transition">
-          Visit &rarr;
-        </span>
-      </a>
-    </div>
-  </div>
-
-  <!-- Main Viewer Card -->
-  <main class="max-w-md mx-auto w-full px-5 py-5 flex-1 flex flex-col justify-center">
+  <!-- Main Viewer Content (No Ads, Zero Distractions) -->
+  <main class="max-w-md mx-auto w-full px-5 py-6 flex-1 flex flex-col justify-center">
 
     <!-- Loading Skeleton -->
     <div id="loader" class="glass-panel rounded-2xl p-8 text-center space-y-3 animate-pulse">
       <div class="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin mx-auto"></div>
-      <div class="text-xs text-zinc-400">Loading shared media...</div>
+      <div class="text-xs text-zinc-400">Loading media...</div>
     </div>
 
     <!-- Active Media Card -->
@@ -84,8 +70,8 @@
       <!-- Top meta info -->
       <div class="flex items-center justify-between border-b border-white/[0.06] pb-3 text-xs">
         <div class="flex items-center space-x-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="font-medium text-zinc-300" id="typeLabel">Shared Clip</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="font-medium text-zinc-300" id="typeLabel">Shared Media</span>
         </div>
         <div class="flex items-center space-x-3 text-zinc-400 text-[11px]">
           <span class="flex items-center space-x-1">
@@ -93,7 +79,7 @@
             <span id="viewCount">1</span>
           </span>
           <span id="expiryBadge" class="hidden text-amber-400">
-            <i class="fa-regular fa-clock"></i> Expires soon
+            <i class="fa-regular fa-clock"></i> Expires
           </span>
         </div>
       </div>
@@ -132,7 +118,7 @@
       <!-- SCREENSHOT / IMAGE -->
       <div id="imageSection" class="hidden">
         <div class="rounded-xl overflow-hidden border border-white/[0.08] bg-black">
-          <img id="mainImage" src="" alt="Screenshot" class="w-full max-h-[420px] object-contain">
+          <img id="mainImage" src="" alt="Screenshot" class="w-full max-h-[460px] object-contain">
         </div>
       </div>
 
@@ -147,48 +133,26 @@
         </a>
       </div>
 
-      <!-- Quick Copy Helper for In-Game Chat -->
+      <!-- Copy / Share Bar -->
       <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
         <span class="truncate font-mono text-[11px] text-zinc-500" id="currentUrl"></span>
         <button id="copyShareBtn" class="text-zinc-200 hover:text-white font-medium ml-2 flex items-center space-x-1 whitespace-nowrap bg-zinc-800 px-2.5 py-1 rounded-md transition text-[11px]">
           <i class="fa-regular fa-copy"></i>
-          <span id="copyShareText">Copy</span>
+          <span id="copyShareText">Copy Link</span>
         </button>
       </div>
 
     </div>
 
-    <!-- MOCKUP AD SLOT 2 (High-Converting Affiliate Placement) -->
-    <div class="mt-4 p-3 rounded-xl bg-zinc-950/90 border border-white/[0.07] hover:border-white/20 transition">
-      <div class="flex items-center justify-between text-[10px] text-zinc-400 mb-1.5">
-        <span class="uppercase tracking-wider font-semibold text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded border border-white/[0.04]">Featured Partner</span>
-        <span class="text-zinc-500">Ad Placement 2</span>
-      </div>
-      <div class="flex items-center justify-between space-x-3">
-        <div class="flex items-center space-x-3 min-w-0">
-          <div class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 text-sm flex-shrink-0">
-            <i class="fa-solid fa-shield-halved"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-xs font-semibold text-zinc-100 truncate">Low-Ping Match Optimizer & Route VPN</div>
-            <div class="text-[11px] text-zinc-400 truncate">Reduce latency spikes by up to 60% in mobile shooters</div>
-          </div>
-        </div>
-        <a href="https://example.com" target="_blank" class="text-[11px] font-medium text-zinc-950 bg-white hover:bg-zinc-200 px-3 py-1.5 rounded-md flex-shrink-0 transition">
-          Get Deal
-        </a>
-      </div>
-    </div>
-
   </main>
 
-  <!-- Footer / Report Abuse -->
+  <!-- Clean Footer -->
   <footer class="w-full border-t border-white/[0.06] py-4 text-center text-xs text-zinc-500">
-    <div class="max-w-md mx-auto px-5 flex items-center justify-between">
-      <span>GGLINK Safe Shield</span>
-      <button id="reportAbuseBtn" class="hover:text-rose-400 transition text-[11px] underline">
-        Report scam / abuse
-      </button>
+    <div class="max-w-md mx-auto px-5 flex items-center justify-between text-[11px]">
+      <span>Shared via GGLINK</span>
+      <a href="/" class="text-zinc-400 hover:text-white transition">
+        Create Your Own Link &rarr;
+      </a>
     </div>
   </footer>
 
@@ -220,26 +184,14 @@
     const currentUrl = document.getElementById('currentUrl');
     const copyShareBtn = document.getElementById('copyShareBtn');
     const copyShareText = document.getElementById('copyShareText');
-    const reportAbuseBtn = document.getElementById('reportAbuseBtn');
 
     currentUrl.innerText = window.location.href;
 
     copyShareBtn.onclick = () => {
       navigator.clipboard.writeText(window.location.href).then(() => {
         copyShareText.innerText = 'Copied!';
-        setTimeout(() => { copyShareText.innerText = 'Copy'; }, 2000);
+        setTimeout(() => { copyShareText.innerText = 'Copy Link'; }, 2000);
       });
-    };
-
-    reportAbuseBtn.onclick = async () => {
-      if (confirm('Are you sure you want to report this media for spam, abuse, or phishing?')) {
-        await fetch('/api/report', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ slug, reason: 'user_flag' })
-        });
-        alert('Thank you. This link has been flagged for administrator safety review.');
-      }
     };
 
     async function fetchMedia() {
@@ -311,7 +263,7 @@
           mainImage.src = data.mediaUrl;
 
         } else {
-          typeLabel.innerText = 'Shortened Link';
+          typeLabel.innerText = 'Link';
           linkSection.classList.remove('hidden');
           destUrl.innerText = data.mediaUrl;
           openLinkBtn.href = data.mediaUrl;

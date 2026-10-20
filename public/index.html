@@ -3,32 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>GGLINK &mdash; Minimalist In-Game Media Sharer</title>
+  <title>GGLINK &mdash; Ultra-Fast In-Game Media Sharer</title>
+  
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="GGLINK — Ultra-Fast In-Game Media Sharer">
+  <meta name="description" content="Share voice clips, screenshots, and links in Free Fire, PUBG, King's Choice, and COD Mobile with a tiny 4-character URL.">
+  <meta name="keywords" content="gaming, in-game chat, voice clip sharer, pubg, free fire, kings choice, discord, shortlink">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#09090b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Open Graph / Facebook / Discord / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://gglink.vercel.app">
+  <meta property="og:title" content="GGLINK — Fast In-Game Media Sharing">
+  <meta property="og:description" content="Drop voice clips, clan screenshots, and links in game chats instantly. Ultra-short 4-letter links.">
+  <meta property="og:site_name" content="GGLINK">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://gglink.vercel.app">
+  <meta name="twitter:title" content="GGLINK — In-Game Voice & Screenshot Sharer">
+  <meta name="twitter:description" content="Fastest way to share voice notes and screenshots inside mobile game chats.">
+
+  <!-- Instant SVG Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23ffffff'/><text x='50%' y='55%' font-family='sans-serif' font-weight='900' font-size='50' fill='%2309090b' text-anchor='middle' dominant-baseline='central'>GG</text></svg>">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              50: '#f8fafc',
-              500: '#ffffff',
-              900: '#09090b',
-              950: '#040406',
-            }
-          }
-        }
-      }
-    }
-  </script>
+  
   <style>
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -41,13 +48,20 @@
       background-size: 24px 24px;
     }
     .glass-panel {
-      background: rgba(18, 18, 23, 0.75);
+      background: rgba(18, 18, 23, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
     .wave-bar {
-      transition: height 0.08s ease;
+      transition: height 0.06s ease;
+    }
+    .toast-enter {
+      animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes toastIn {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
   </style>
 </head>
@@ -55,81 +69,80 @@
 
   <!-- Header -->
   <header class="w-full border-b border-white/[0.06] bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-xl mx-auto px-5 h-14 flex items-center justify-between">
+    <div class="max-w-md mx-auto px-5 h-14 flex items-center justify-between">
       <div class="flex items-center space-x-2.5">
         <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-zinc-950 font-bold text-xs tracking-tight">
           GG
         </div>
         <div class="flex items-center space-x-2">
           <span class="font-semibold text-sm tracking-tight text-white">GGLINK</span>
-          <span class="text-[11px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-medium">v1.0</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-medium border border-emerald-500/20">Fast</span>
         </div>
       </div>
 
       <div class="flex items-center space-x-3">
-        <!-- Settings button -->
-        <button id="settingsBtn" class="text-zinc-400 hover:text-white transition p-1.5 rounded-lg hover:bg-zinc-900 text-xs flex items-center space-x-1.5">
-          <i class="fa-solid fa-sliders"></i>
-          <span class="hidden sm:inline">Options</span>
+        <button id="settingsBtn" class="text-zinc-400 hover:text-white transition p-1.5 rounded-lg hover:bg-zinc-900 text-xs flex items-center space-x-1">
+          <i class="fa-solid fa-gear"></i>
+          <span class="hidden sm:inline">Settings</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="flex-1 max-w-xl mx-auto w-full px-5 py-8 flex flex-col justify-center">
+  <!-- Main Container -->
+  <main class="flex-1 max-w-md mx-auto w-full px-5 py-6 flex flex-col justify-center">
 
-    <!-- Hero Title -->
-    <div class="text-center mb-8 space-y-2">
-      <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-        Share media inside game chats
+    <!-- Clean Hero -->
+    <div class="text-center mb-6 space-y-1.5">
+      <h1 class="text-2xl font-semibold tracking-tight text-white">
+        Instant In-Game Media
       </h1>
-      <p class="text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
-        Send voice notes, screenshots, and links in Free Fire, PUBG, or King's Choice with a tiny 4-letter URL.
+      <p class="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
+        Drop voice or screenshots &bull; Get a tiny 4-letter link for game chats.
       </p>
     </div>
 
-    <!-- Options / Settings Dropdown (Hidden by default) -->
-    <div id="settingsDrawer" class="hidden mb-6 p-4 rounded-xl glass-panel text-xs space-y-3">
+    <!-- Settings Drawer (Hidden by default) -->
+    <div id="settingsDrawer" class="hidden mb-5 p-4 rounded-xl glass-panel text-xs space-y-3">
       <div class="flex items-center justify-between">
-        <span class="text-zinc-300 font-medium">Auto-Delete Media (Privacy)</span>
-        <select id="expiresIn" class="bg-zinc-900 border border-white/10 rounded-lg px-2.5 py-1 text-zinc-200 focus:outline-none">
+        <span class="text-zinc-300 font-medium">Link Expiration</span>
+        <select id="expiresIn" class="bg-zinc-900 border border-white/10 rounded-lg px-2.5 py-1 text-zinc-200 text-xs focus:outline-none">
           <option value="0">Never (Permanent)</option>
-          <option value="24">After 24 Hours</option>
-          <option value="168">After 7 Days</option>
-          <option value="720">After 30 Days</option>
+          <option value="24">24 Hours</option>
+          <option value="168">7 Days</option>
+          <option value="720">30 Days</option>
         </select>
       </div>
       <p class="text-[11px] text-zinc-500">
-        Images are automatically compressed to WebP and voice clips are encoded in Opus for instant in-game loading.
+        Audio is encoded in low-latency Opus and images are processed instantly on-device.
       </p>
     </div>
 
-    <!-- Primary Control Hub -->
-    <div class="glass-panel rounded-2xl p-6 sm:p-7 shadow-2xl relative overflow-hidden">
+    <!-- Main Tool Card -->
+    <div class="glass-panel rounded-2xl p-6 shadow-2xl space-y-5">
 
-      <!-- Navigation Segment Tabs -->
-      <div class="flex bg-zinc-900/90 p-1 rounded-xl border border-white/[0.06] mb-6">
+      <!-- Navigation Tabs -->
+      <div class="flex bg-zinc-900/90 p-1 rounded-xl border border-white/[0.06]">
         <button id="btnTabVoice" class="flex-1 py-2 text-xs font-medium rounded-lg transition text-white bg-zinc-800 shadow-sm flex items-center justify-center space-x-1.5">
           <i class="fa-solid fa-microphone text-[11px]"></i>
           <span>Voice</span>
         </button>
         <button id="btnTabImage" class="flex-1 py-2 text-xs font-medium rounded-lg transition text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5">
           <i class="fa-regular fa-image text-[11px]"></i>
-          <span>Image</span>
+          <span>Screenshot</span>
         </button>
         <button id="btnTabLink" class="flex-1 py-2 text-xs font-medium rounded-lg transition text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5">
           <i class="fa-solid fa-link text-[11px]"></i>
-          <span>Link</span>
+          <span>Shorten</span>
         </button>
       </div>
 
-      <!-- TAB 1: Voice Recorder -->
-      <div id="sectionVoice" class="text-center space-y-5">
+      <!-- TAB 1: Ultra-Fast Voice Recorder -->
+      <div id="sectionVoice" class="text-center space-y-5 py-2">
         
-        <!-- Live Waveform Visualizer -->
-        <div class="h-16 flex items-center justify-center space-x-1 px-4 py-2 bg-zinc-950/60 rounded-xl border border-white/[0.04]">
-          <div id="waveform" class="flex items-center space-x-1 h-full">
+        <!-- Live Realtime Waveform -->
+        <div class="h-14 flex items-center justify-center px-4 py-2 bg-zinc-950/70 rounded-xl border border-white/[0.04]">
+          <div id="waveform" class="flex items-center space-x-1.5 h-full">
             <div class="w-1 bg-zinc-700 h-2 rounded-full wave-bar"></div>
             <div class="w-1 bg-zinc-700 h-4 rounded-full wave-bar"></div>
             <div class="w-1 bg-zinc-700 h-6 rounded-full wave-bar"></div>
@@ -143,21 +156,21 @@
           </div>
         </div>
 
-        <div class="py-2">
-          <button id="recordTrigger" class="group relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-white hover:bg-zinc-200 text-zinc-950 transition-all duration-200 shadow-xl active:scale-95 cursor-pointer">
+        <div>
+          <button id="recordTrigger" class="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-white hover:bg-zinc-200 text-zinc-950 transition-all duration-150 shadow-xl active:scale-95 cursor-pointer">
             <i class="fa-solid fa-microphone text-2xl" id="recordIcon"></i>
             <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-rose-500 border-2 border-zinc-950 hidden" id="recDot"></span>
           </button>
         </div>
 
         <div>
-          <div class="text-xs font-medium text-zinc-200" id="recordPrompt">Tap to record voice message</div>
+          <div class="text-xs font-medium text-zinc-200" id="recordPrompt">Tap to record voice</div>
           <div class="text-[11px] text-zinc-500 font-mono mt-0.5" id="recordTimer">00:00 / 00:30</div>
         </div>
 
-        <div class="pt-3 border-t border-white/[0.06] flex items-center justify-center">
-          <label class="cursor-pointer text-xs text-zinc-400 hover:text-zinc-200 transition flex items-center space-x-1.5">
-            <i class="fa-solid fa-arrow-up-from-bracket text-[10px]"></i>
+        <div class="pt-2 border-t border-white/[0.04]">
+          <label class="cursor-pointer text-[11px] text-zinc-500 hover:text-zinc-300 transition inline-flex items-center space-x-1">
+            <i class="fa-solid fa-upload text-[10px]"></i>
             <span>Or upload audio file</span>
             <input type="file" id="audioFileInput" accept="audio/*" class="hidden">
           </label>
@@ -165,62 +178,61 @@
 
       </div>
 
-      <!-- TAB 2: Image Uploader -->
+      <!-- TAB 2: Instant Screenshot Dropzone -->
       <div id="sectionImage" class="hidden space-y-4">
         <label for="imageFileInput" class="border border-dashed border-white/10 hover:border-white/30 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition bg-zinc-950/40 group">
-          <div class="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-300 group-hover:text-white transition mb-3">
+          <div class="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-300 group-hover:text-white transition mb-2.5">
             <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
           </div>
-          <span class="text-xs font-medium text-zinc-200">Drop screenshot or tap to browse</span>
-          <span class="text-[11px] text-zinc-500 mt-1">Supports PNG, JPG, WebP &bull; Ctrl+V to paste</span>
+          <span class="text-xs font-medium text-zinc-200">Tap to select screenshot</span>
+          <span class="text-[11px] text-zinc-500 mt-0.5">Instant upload &bull; Paste with Ctrl+V</span>
           <input type="file" id="imageFileInput" accept="image/*" class="hidden">
         </label>
-        <div id="uploadingProgress" class="hidden text-center text-xs text-zinc-400 py-2">
-          <i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Optimizing image...
+        <div id="uploadingProgress" class="hidden text-center text-xs text-zinc-400 py-1">
+          <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Uploading...
         </div>
       </div>
 
-      <!-- TAB 3: Short Link -->
+      <!-- TAB 3: Instant Shortlink -->
       <div id="sectionLink" class="hidden space-y-3">
         <label class="block text-xs font-medium text-zinc-300">Destination URL</label>
         <div class="flex items-center space-x-2">
           <input 
             type="url" 
             id="urlInput" 
-            placeholder="https://discord.gg/yourclan" 
+            placeholder="https://discord.gg/clan" 
             class="flex-1 bg-zinc-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-white/30 transition"
           />
           <button id="shortenBtn" class="bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-xs px-4 py-2.5 rounded-xl transition">
             Shorten
           </button>
         </div>
-        <p class="text-[11px] text-zinc-500">Creates an ultra-short 4-character link that won't get cut off in mobile chats.</p>
       </div>
 
     </div>
 
-    <!-- RESULT SUCCESS CARD (Appears upon creation) -->
-    <div id="successCard" class="hidden mt-6 p-5 rounded-2xl glass-panel border border-white/10 space-y-3 animate-fade-in">
+    <!-- SUCCESS POPUP / INSTANT AUTO-COPIED LINK -->
+    <div id="successCard" class="hidden mt-5 p-4 rounded-2xl glass-panel border border-emerald-500/20 toast-enter space-y-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-2">
-          <div class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">
+          <div class="w-4 h-4 rounded-full bg-emerald-500 text-zinc-950 flex items-center justify-center text-[9px] font-bold">
             <i class="fa-solid fa-check"></i>
           </div>
-          <span class="text-xs font-medium text-zinc-200">Link created & copied to clipboard</span>
+          <span class="text-xs font-medium text-emerald-400">Copied to clipboard!</span>
         </div>
         <span class="text-[10px] text-zinc-500 font-mono" id="shortSlug"></span>
       </div>
 
-      <div class="bg-zinc-950 rounded-xl p-3 border border-white/[0.06] flex items-center justify-between">
+      <div class="bg-zinc-950 rounded-xl p-2.5 border border-white/[0.06] flex items-center justify-between">
         <span class="font-mono text-xs text-zinc-200 font-semibold truncate pr-2" id="fullUrlDisplay"></span>
-        <button id="copyAgain" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium px-3 py-1.5 rounded-lg transition flex-shrink-0">
+        <button id="copyAgain" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium px-3 py-1 rounded-lg transition flex-shrink-0">
           Copy
         </button>
       </div>
 
-      <div class="flex items-center justify-between pt-1 text-[11px] text-zinc-400">
+      <div class="flex items-center justify-between pt-0.5 text-[11px] text-zinc-400">
         <a id="previewBtn" href="#" target="_blank" class="hover:text-white transition flex items-center space-x-1">
-          <span>Open Card</span>
+          <span>Open Link</span>
           <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
         </a>
         <button id="newDropBtn" class="hover:text-white transition">
@@ -229,33 +241,21 @@
       </div>
     </div>
 
-    <!-- Tasteful Sponsored Slot (Production-Ready Mockup) -->
-    <div class="mt-8 p-3 rounded-xl bg-zinc-950/60 border border-white/[0.04] flex items-center justify-between text-xs">
-      <div class="flex items-center space-x-2.5 min-w-0 pr-2">
-        <span class="text-[9px] uppercase tracking-wider font-semibold text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded border border-white/[0.04]">Ad</span>
-        <span class="text-zinc-400 truncate text-[11px]">Official Multi-Game Top-Up Voucher Store</span>
-      </div>
-      <a href="https://example.com" target="_blank" class="text-[11px] text-zinc-300 hover:text-white underline font-medium flex-shrink-0">
-        Claim 5% Off &rarr;
-      </a>
-    </div>
-
   </main>
 
-  <!-- Footer -->
-  <footer class="w-full border-t border-white/[0.06] py-5 text-center text-xs text-zinc-500">
-    <div class="max-w-xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <span>&copy; 2026 GGLINK &bull; Production Infrastructure</span>
-      <div class="flex items-center space-x-4 text-[11px]">
-        <a href="#" class="hover:text-zinc-400 transition" onclick="alert('GGLINK automatically encrypts uploads and removes metadata for maximum privacy.'); return false;">Privacy</a>
-        <a href="#" class="hover:text-zinc-400 transition" onclick="alert('Zero-tolerance policy for phishing and malicious files.'); return false;">Abuse</a>
-        <a href="https://github.com/devfaisee" target="_blank" class="hover:text-zinc-400 transition">GitHub</a>
+  <!-- Clean Minimalist Footer -->
+  <footer class="w-full border-t border-white/[0.06] py-4 text-center text-xs text-zinc-500">
+    <div class="max-w-md mx-auto px-5 flex items-center justify-between text-[11px]">
+      <span>&copy; GGLINK &bull; In-Game Sharer</span>
+      <div class="flex items-center space-x-3">
+        <a href="https://github.com/devfaisee/gglink" target="_blank" class="hover:text-zinc-300 transition">GitHub</a>
+        <a href="#" onclick="alert('GGLINK uses end-to-end memory buffers and zero permanent tracking.'); return false;" class="hover:text-zinc-300 transition">Privacy</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // Tab Switching
+    // Tab switching
     const btnTabVoice = document.getElementById('btnTabVoice');
     const btnTabImage = document.getElementById('btnTabImage');
     const btnTabLink = document.getElementById('btnTabLink');
@@ -278,12 +278,12 @@
     btnTabImage.onclick = () => switchTab(btnTabImage, sectionImage);
     btnTabLink.onclick = () => switchTab(btnTabLink, sectionLink);
 
-    // Options Drawer Toggle
+    // Settings Toggle
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsDrawer = document.getElementById('settingsDrawer');
     settingsBtn.onclick = () => settingsDrawer.classList.toggle('hidden');
 
-    // Success elements
+    // Result elements
     const successCard = document.getElementById('successCard');
     const fullUrlDisplay = document.getElementById('fullUrlDisplay');
     const shortSlug = document.getElementById('shortSlug');
@@ -299,7 +299,7 @@
       successCard.classList.remove('hidden');
       successCard.scrollIntoView({ behavior: 'smooth' });
 
-      // Auto-copy
+      // Immediate auto-copy to clipboard
       navigator.clipboard.writeText(full).then(() => {
         copyAgain.innerText = 'Copied!';
         setTimeout(() => { copyAgain.innerText = 'Copy'; }, 2000);
@@ -314,7 +314,7 @@
       });
     };
 
-    // --- 1. VOICE RECORDING WITH ANIMATED WAVEFORM ---
+    // --- 1. OPTIMIZED LOW-LATENCY VOICE RECORDING (24kbps Opus) ---
     const recordTrigger = document.getElementById('recordTrigger');
     const recordIcon = document.getElementById('recordIcon');
     const recDot = document.getElementById('recDot');
@@ -335,8 +335,8 @@
       if (!isRecording) {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          
-          // Audio visualization
+
+          // Audio Visualizer
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
           analyser = audioCtx.createAnalyser();
           analyser.fftSize = 32;
@@ -349,7 +349,7 @@
             analyser.getByteFrequencyData(dataArray);
             waveBars.forEach((bar, idx) => {
               const val = dataArray[idx % dataArray.length] || 10;
-              const h = Math.max(4, Math.min(48, (val / 255) * 48));
+              const h = Math.max(3, Math.min(38, (val / 255) * 38));
               bar.style.height = `${h}px`;
               bar.style.backgroundColor = '#f43f5e';
             });
@@ -357,7 +357,14 @@
           }
           animateWave();
 
-          mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+          // Low-bitrate Opus encoding: 24,000 bps = ~40KB per 15s (super fast upload!)
+          const options = { mimeType: 'audio/webm;codecs=opus', audioBitsPerSecond: 24000 };
+          try {
+            mediaRecorder = new MediaRecorder(stream, options);
+          } catch (e) {
+            mediaRecorder = new MediaRecorder(stream);
+          }
+
           audioChunks = [];
           mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
 
@@ -368,11 +375,11 @@
             clearInterval(timerInt);
 
             waveBars.forEach(bar => {
-              bar.style.height = '8px';
+              bar.style.height = '6px';
               bar.style.backgroundColor = '#52525b';
             });
 
-            recordPrompt.innerText = 'Saving voice note...';
+            recordPrompt.innerText = 'Creating shortlink...';
             const blob = new Blob(audioChunks, { type: 'audio/webm' });
 
             const fd = new FormData();
@@ -384,18 +391,18 @@
             if (data.success) {
               onCreated(data.slug);
             } else {
-              alert(data.error || 'Failed to save voice note');
+              alert(data.error || 'Failed to save voice clip');
             }
 
             // Reset UI
             recordIcon.className = 'fa-solid fa-microphone text-2xl';
             recDot.classList.add('hidden');
-            recordPrompt.innerText = 'Tap to record voice message';
+            recordPrompt.innerText = 'Tap to record voice';
             recordTimer.innerText = '00:00 / 00:30';
             isRecording = false;
           };
 
-          mediaRecorder.start();
+          mediaRecorder.start(250); // Small chunking for instant processing
           isRecording = true;
           recordIcon.className = 'fa-solid fa-stop text-2xl text-rose-500';
           recDot.classList.remove('hidden');
@@ -410,7 +417,7 @@
           }, 1000);
 
         } catch (err) {
-          alert('Microphone access is required to record voice notes. You can also upload an audio file directly.');
+          alert('Microphone access is required. You can also upload an audio file directly.');
         }
       } else {
         mediaRecorder.stop();
@@ -429,24 +436,35 @@
       if (data.success) onCreated(data.slug);
     };
 
-    // --- 2. IMAGE WEBP CLIENT COMPRESSION ---
+    // --- 2. OPTIMIZED FAST IMAGE UPLOAD ---
     const imageFileInput = document.getElementById('imageFileInput');
     const uploadingProgress = document.getElementById('uploadingProgress');
 
-    async function processAndUploadImage(file) {
+    async function handleFastImageUpload(file) {
       uploadingProgress.classList.remove('hidden');
 
-      // Client-side canvas compression to WebP (keeps uploads tiny and fast)
+      // If file is already small (< 500KB), upload directly for zero delay!
+      if (file.size < 500 * 1024) {
+        const fd = new FormData();
+        fd.append('media', file);
+        fd.append('expiresIn', document.getElementById('expiresIn').value);
+        const res = await fetch('/api/drop', { method: 'POST', body: fd });
+        const data = await res.json();
+        uploadingProgress.classList.add('hidden');
+        if (data.success) onCreated(data.slug);
+        return;
+      }
+
+      // Fast downscale on canvas for large photos
       const img = new Image();
       img.src = URL.createObjectURL(file);
-      img.onload = async () => {
+      img.onload = () => {
         const canvas = document.createElement('canvas');
-        const maxDim = 1600;
-        let w = img.width;
-        let h = img.height;
-        if (w > maxDim || h > maxDim) {
-          if (w > h) { h = (h / w) * maxDim; w = maxDim; }
-          else { w = (w / h) * maxDim; h = maxDim; }
+        const max = 1200;
+        let w = img.width, h = img.height;
+        if (w > max || h > max) {
+          if (w > h) { h = Math.round((h / w) * max); w = max; }
+          else { w = Math.round((w / h) * max); h = max; }
         }
         canvas.width = w;
         canvas.height = h;
@@ -457,30 +475,29 @@
           const fd = new FormData();
           fd.append('media', blob, 'screenshot.webp');
           fd.append('expiresIn', document.getElementById('expiresIn').value);
-
           const res = await fetch('/api/drop', { method: 'POST', body: fd });
           const data = await res.json();
           uploadingProgress.classList.add('hidden');
           if (data.success) onCreated(data.slug);
-        }, 'image/webp', 0.85);
+        }, 'image/webp', 0.80);
       };
     }
 
     imageFileInput.onchange = (e) => {
-      if (e.target.files[0]) processAndUploadImage(e.target.files[0]);
+      if (e.target.files[0]) handleFastImageUpload(e.target.files[0]);
     };
 
     window.addEventListener('paste', (e) => {
       const items = (e.clipboardData || e.originalEvent.clipboardData).items;
       for (const item of items) {
         if (item.kind === 'file' && item.type.startsWith('image/')) {
-          processAndUploadImage(item.getAsFile());
+          handleFastImageUpload(item.getAsFile());
           break;
         }
       }
     });
 
-    // --- 3. LINK SHORTENER ---
+    // --- 3. FAST LINK SHORTENER ---
     const urlInput = document.getElementById('urlInput');
     const shortenBtn = document.getElementById('shortenBtn');
 
